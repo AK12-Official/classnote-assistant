@@ -53,13 +53,23 @@ public class AudioController {
     @PostMapping("/transcribe")
     public ResponseEntity<Result<String>> transcribeAudio(@RequestParam("file") MultipartFile file) {
         try {
-            // 保存上传的音频文件
-            String audioPath = "audio/" + file.getOriginalFilename();
-            file.transferTo(new File(audioPath));
+            // Validate the file
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body(Result.error("文件不能为空"));
+            }
 
-            // 调用 Python 脚本进行转写
-            String outputPath = "output/" + UUID.randomUUID() + ".txt";
+            // 保存上传的音频文件
+            String audioPath = audioService.saveAudio(file);
+
+            // 设置输出文件的绝对路径（使用音频文件名作为输出文件名）
+            String fileName = audioPath.substring(audioPath.lastIndexOf("\\") + 1);
+            fileName = fileName.substring(0, fileName.lastIndexOf("."));
+            String outputPath = "D:/Ai/whisper-local/output/" + fileName + ".txt";
+            
             String resultText = WhisperUtil.runWhisper(audioPath, "small", outputPath);
+            if (resultText.startsWith("调用错误") || resultText.startsWith("调用 Whisper 失败") || resultText.startsWith("转写失败")) {
+                return ResponseEntity.status(500).body(Result.error(resultText));
+            }
 
             return ResponseEntity.ok(Result.success(resultText));
         } catch (Exception e) {
