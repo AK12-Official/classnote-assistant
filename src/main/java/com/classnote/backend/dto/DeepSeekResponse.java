@@ -1,9 +1,8 @@
 package com.classnote.backend.dto;
 
-import lombok.Data;
-import lombok.Getter;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class DeepSeekResponse {

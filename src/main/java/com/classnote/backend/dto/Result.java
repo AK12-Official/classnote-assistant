@@ -18,7 +18,7 @@ public class Result<T> {
     private String msg;
     private T data;
 
-    // 手动添加 getter/setter 方法
+    // 手动添加 getter/setter 方法（傻逼Lombok）
     public int getCode() {
         return code;
     }

@@ -38,7 +38,7 @@ public class DeepSeekService {
         // 避免JSON格式化问题，使用转义
         prompt = prompt.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
 
-        // 使用Jackson或其他库生成JSON可以避免格式问题
+        // 使用Jackson生成JSON
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("model", "deepseek-chat");
 
